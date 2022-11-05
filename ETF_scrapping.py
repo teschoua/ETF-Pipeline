@@ -6,10 +6,12 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 import pandas as pd
 from selenium import webdriver
-from selenium.webdriver.firefox import options as firefox_options
+from selenium.webdriver.firefox.options import Options as firefoxOptions
 from selenium.webdriver.common.by import By
 
 import concurrent.futures
+
+path_folder = Path(os.getcwd())
 
 def get_page(urls):
 
@@ -62,7 +64,6 @@ def parse_page(page):
     
     return result
 
-
 def request_save_list_etf_pages():
   
   urls = []
@@ -77,72 +78,64 @@ def request_save_list_etf_pages():
 
 def request_download_etf(list_etf_links):
 
-  urls = ['https://www.boursorama.com' + etf_link for etf_link in list_etf_links]
-  print(urls[0:2])
+    urls = ['https://www.boursorama.com' + etf_link for etf_link in list_etf_links]
+    print(list_etf_links)
+
+    def request_url(url):
+
+        options = firefoxOptions()
+        options.set_preference("browser.download.folderList", 2)
+        options.set_preference("browser.download.manager.showWhenStarting", True)
+        options.set_preference("browser.download.dir", str(path_folder / 'Dataset/ETF/'))
+        options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream")
+
+        driver = webdriver.Firefox(options=options)
+
+        try:
+
+            driver.get(url)
+
+            # Decline Cookies
+            # cookie_accepting = driver.find_element(By.CLASS_NAME, "didomi-continue-without-agreeing")
+            cookie_accepting = driver.find_element(By.ID, "didomi-notice-agree-button")
+
+            cookie_accepting.click()
+
+            # Change temporality to 10 years
+            time_10_years = driver.find_element(By.XPATH, "//div[@data-brs-quote-chart-duration-length='3650']")
+            time_10_years.click()
+
+            # Download
+            # download_button = driver.find_element(By.CLASS_NAME, "c-quote-chart__quick-command")
+            download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
+            download_button.click()
+
+            time.sleep(2)
+
+            driver.quit()
+
+        except Exception as e:
+            print(e)
 
 
-  def request_url(url):
-    profile = webdriver.FirefoxProfile()
-    profile.set_preference("browser.download.folderList", 2)
-    profile.set_preference("browser.download.manager.showWhenStarting", True)
-    profile.set_preference("browser.download.dir", 'C:\\Users\\tesch\\OneDrive\\Bureau\\Portfolio\\Dataset\\ETF')  
-    profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/octet-stream")
+    # with concurrent.futures.ThreadPoolExecutor() as executor :
+    #     executor.map(request_url, urls)
 
-    driver = webdriver.Firefox(firefox_profile=profile)
-
-    try:
-
-      driver.get(url)
-
-      # Decline Cookies
-      # cookie_accepting = driver.find_element(By.CLASS_NAME, "didomi-continue-without-agreeing")
-      cookie_accepting = driver.find_element(By.ID, "didomi-notice-agree-button")
-      
-      cookie_accepting.click()
-      
-      # Change temporality to 10 years
-      time_10_years = driver.find_element(By.XPATH, "//div[@data-brs-quote-chart-duration-length='3650']")
-      time_10_years.click()
-
-      # Download
-      # download_button = driver.find_element(By.CLASS_NAME, "c-quote-chart__quick-command")
-      download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
-      download_button.click()
-
-      time.sleep(1)
-
-      driver.quit()
-
-    except Exception as e:
-      print (e)
-
-
-  with concurrent.futures.ThreadPoolExecutor() as executor :
-    executor.map(request_url, urls[0:10])
-
-  # for url in urls[0:10] :
-  #   request_url(url)
+    for url in urls :
+      request_url(url)
 
 def main():
-
-  
-  # print("File      Path:", Path(__file__).absolute())
-  # print("Directory Path:", Path().absolute()) # Directory of current working directory, not __file__
   
   # URLs pages with list of ETFs
 
-  # request_save_list_etf_pages()
+  # 1. request_save_list_etf_pages()
 
-  # Load list_etf pages
-  list_etf_links = parse_pages('list_etf')
+  # 2. Load list_etf pages
+    list_etf_links = parse_pages('list_etf')
 
   # Request each ETF and Download Data
-  request_download_etf(list_etf_links)
+    request_download_etf(list_etf_links[0:1])
 
-#   results.to_csv('df/200_movies.csv')
-#   df = pd.read_csv("df/200_movies.csv")
-#   print(df.describe())
-    
 if __name__ == "__main__":
     main()
     
