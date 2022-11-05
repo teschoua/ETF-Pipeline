@@ -9,6 +9,8 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as firefoxOptions
 from selenium.webdriver.common.by import By
 
+# import geckodriver_autoinstaller
+
 import concurrent.futures
 
 path_folder = Path(os.getcwd())
@@ -86,6 +88,7 @@ def request_download_etf(list_etf_links):
     def request_url(url):
 
         options = firefoxOptions()
+        options.add_argument("--headless")
         options.set_preference("browser.download.folderList", 2)
         options.set_preference("browser.download.manager.showWhenStarting", True)
         options.set_preference("browser.download.dir", str(path_folder / 'Dataset/ETF/'))
@@ -96,7 +99,8 @@ def request_download_etf(list_etf_links):
         try:
 
             driver.get(url)
-
+            
+            # time.sleep(1)
             # Decline Cookies
             # cookie_accepting = driver.find_element(By.CLASS_NAME, "didomi-continue-without-agreeing")
             cookie_accepting = driver.find_element(By.ID, "didomi-notice-agree-button")
@@ -112,7 +116,7 @@ def request_download_etf(list_etf_links):
             download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
             download_button.click()
 
-            time.sleep(2)
+            time.sleep(3)
 
             driver.quit()
 
@@ -120,14 +124,15 @@ def request_download_etf(list_etf_links):
             print(e)
 
 
-    # with concurrent.futures.ThreadPoolExecutor() as executor :
-    #     executor.map(request_url, urls)
+    with concurrent.futures.ThreadPoolExecutor() as executor :
+        executor.map(request_url, urls)
 
-    for url in urls :
-      request_url(url)
+    # for url in urls :
+    #   request_url(url)
 
 def main():
-    print(path_folder)
+    # geckodriver_autoinstaller.install()
+
   # URLs pages with list of ETFs
 
   # 1. request_save_list_etf_pages()
@@ -136,7 +141,7 @@ def main():
     list_etf_links = parse_pages('list_etf')
 
   # Request each ETF and Download Data
-    request_download_etf(list_etf_links[0:10])
+    request_download_etf(list_etf_links[0:20])
 
 if __name__ == "__main__":
     main()
