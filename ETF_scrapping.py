@@ -9,9 +9,11 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as firefoxOptions
 from selenium.webdriver.common.by import By
 
-# import geckodriver_autoinstaller
-
 import concurrent.futures
+from concurrent.futures import as_completed
+
+from random import random
+from threading import Lock
 
 path_folder = Path(os.getcwd())
 
@@ -116,20 +118,41 @@ def request_download_etf(list_etf_links):
             download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
             download_button.click()
 
-            time.sleep(3)
+            time.sleep(4)
 
             driver.quit()
 
         except Exception as e:
             print(e)
+            driver.quit()
 
+    # simple progress indicator callback function
+    def progress_indicator(future):
+        nonlocal lock, tasks_total, tasks_completed
+        # obtain the lock
+        with lock:
+            # update the counter
+            tasks_completed += 1
+            # report progress
+            print(f'{tasks_completed}/{tasks_total} completed, {tasks_total-tasks_completed} remain.')
 
-    with concurrent.futures.ThreadPoolExecutor() as executor :
-        executor.map(request_url, urls)
+    # create a lock for the counter
+    lock = Lock()
+    # total tasks we will execute
+    tasks_total = len(urls)
+    # total completed tasks
+    tasks_completed = 0
 
-    # for url in urls :
-    #   request_url(url)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+        # executor.map(request_url, urls, timeout=5)
+        futures = [executor.submit(request_url, url) for url in urls]
 
+        for future in as_completed(futures, timeout=None):
+            future.add_done_callback(progress_indicator)
+
+        executor.shutdown()
+
+    return 'Done'
 def main():
     # geckodriver_autoinstaller.install()
 
