@@ -39,13 +39,15 @@ def save_pages(folder_name, name_page, pages):
       f_out.write(page) 
 
 def parse_pages(folder_name):
-    pages_paths = os.listdir(f"Dataset/pages/{folder_name}")
+    # pages_paths = os.listdir(f"Dataset/pages/{folder_name}")
+    pages_paths = os.listdir(str(path_folder / f'Dataset/pages/{folder_name}'))
 
     #   results = pd.DataFrame()
     results = []
 
     for page_path in pages_paths:
-        with open(f"Dataset/pages/{folder_name}/" + page_path, "rb") as f_in:
+        # with open(f"Dataset/pages/{folder_name}/" + page_path, "rb") as f_in:
+        with open(str(path_folder / f'Dataset/pages/{folder_name}/{page_path}'), "rb") as f_in:
             page = f_in.read().decode("utf-8")
             result = parse_page(page)
             results += result
@@ -125,7 +127,7 @@ def request_download_etf(list_etf_links):
       request_url(url)
 
 def main():
-  
+    print(path_folder)
   # URLs pages with list of ETFs
 
   # 1. request_save_list_etf_pages()
@@ -134,7 +136,7 @@ def main():
     list_etf_links = parse_pages('list_etf')
 
   # Request each ETF and Download Data
-    request_download_etf(list_etf_links[0:1])
+    request_download_etf(list_etf_links[0:10])
 
 if __name__ == "__main__":
     main()
