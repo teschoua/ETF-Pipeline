@@ -72,13 +72,13 @@
 <!-- data-format -->
 ## Data Format
 
-Extension :
+<b>Extension</b> :
 
 ```
 etf_file.txt
 ```
 
-Format :
+<b>Format</b>  :
 
 | Date  | Ouverture | Haut | Bas | Clôture | Volume | Devise |
 | ----- | --------- | ---- | --- | ------- | ------ | ------ |
