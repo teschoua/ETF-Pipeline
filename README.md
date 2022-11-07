@@ -33,10 +33,7 @@
 
 </div>
 
-* Stock Prediction Simulator is a Web Application that allows you to simulate trades on a given period, based on a machine learning model (Bi-LSTM). <br/>
-* The application offers a dynamic candlestick chart, where you can supervise the predicted price, the information about the trades made, and the actual price of the stock. <br/>
-* A trade table and an balance chart are also avaible, so that you can track the evolution of your account balance trade by trade.
-* Web App Link : http://ec2-18-212-239-239.compute-1.amazonaws.com/
+* ETF Pipeline is a python project that allows you to download historical data of ETFs from the website [www.boursorama.com](https://www.boursorama.com).
 <br />
 <br />
 
@@ -45,27 +42,17 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
+      	<a href="#built-with">Built With</a></li>
     </li>
     <li>
-      <a href="#dataset">Dataset</a>
-      <ul>
-        <li><a href="#yahoo-finance-api">Yahoo Finance API</a></li>
-        <li><a href="#preprocessing">Preprocessing</a></li>
-      </ul>
+	<a href="#data-format">Data Format</a>
     </li>
-    <li><a href="#model">Model</a></li>
     <li>
-      <a href="#results">Results</a>
-      <ul>
-        <li><a href="#metrics">Metrics</a></li>
-        <li><a href="#results-of-the-model">Results of the model</a></li>
-      </ul>
+      	<a href="#commands">Commands</a>
     </li>
-    <li><a href="#contact">Contact</a></li>
+    <li>
+    	<a href="#contact">Contact</a>
+    </li>
   </ol>
 </details>
 
