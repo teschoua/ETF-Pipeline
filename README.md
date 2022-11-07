@@ -29,11 +29,11 @@
     <img src="Images/pipeline.png" alt="Logo" width="80" height="80">
   </a>
 
-<h1 align="center">Stock Prediction Simulator</h1>
+<h1 align="center">ETF Pipeline</h1>
 
 </div>
 
-* ETF Pipeline is a python project that allows you to download historical data of ETFs from the website [www.boursorama.com](https://www.boursorama.com).
+* ETF Pipeline is a Web Scraping project that allows you to download historical data of ETFs from the website [www.boursorama.com](https://www.boursorama.com).
 <br />
 <br />
 
@@ -67,8 +67,6 @@
 * [![Selenium][Selenium-logo]](https://selenium-python.readthedocs.io/)
 * [![Beautiful Soup][Beautifulsoup-logo]]([https://aws.amazon.com/fr/ec2/](https://python.doctor/page-beautifulsoup-html-parser-python-library-xml))
 
-
-<br />
 <br />
 
 <!-- data-format -->
@@ -83,13 +81,23 @@
 
 ## Commands
 
-The goal of the model is to predict the close price for the next 7 days, based on the previous 30 days close prices.
+Installation Commands :
 
-<a>
-    <img src="Images/structure-data.png" >
-</a>
+'''
+git clone https://github.com/teschoua/ETF-Pipeline
+'''
 
-This way we create a **train dataset** with a shape of **(batch_size, 30, 1)**, and a **test dataset** with a shape of **(batch_size, 7)**.
+Install Requirements :
+
+'''
+pip install -r requirements.txt
+'''
+
+Run the script :
+
+'''
+python ETF_scrapping.py
+'''
 
 <br/>
 
