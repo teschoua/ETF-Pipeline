@@ -80,7 +80,7 @@
 
 | Date  | Ouverture | Haut | Bas | Clotûre | Volume | Devise |
 | ----- | --------- | ---- | --- | ------- | ------ | ------ |
-| (Object) | (float64) | (float64) | (float64) | (float64) | (Object) |
+| (Object) | (float64) | (float64) | (float64) | (float64) | (float64) | (Object) |
 
 
 <br />
