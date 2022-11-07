@@ -99,6 +99,8 @@ Run the script :
 python ETF_scrapping.py
 ```
 
+Downloaded files will be in the folder Dataset/ETF/
+
 <br/>
 
 <!-- CONTACT -->
