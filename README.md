@@ -120,7 +120,7 @@ Linkedin : [Linkedin Thibaut ESCHOUA](https://www.linkedin.com/in/thibaut-eschou
 [linkedin-url]: https://www.linkedin.com/in/thibaut-eschoua/
 [product-screenshot]: images/screenshot.png
 [Python-logo]: https://img.shields.io/badge/Python-20232A?style=for-the-badge&logo=python&logoColor=white
-[Beautifulsoup-logo]:https://img.shields.io/badge/Beautifulsoup-20232A?style=for-the-badge&logo=python&logoColor=white
+[Beautifulsoup-logo]:https://img.shields.io/badge/Beautifulsoup-fc9003?style=for-the-badge&logo=python&logoColor=white
 [Selenium-logo]:https://img.shields.io/badge/Selenium-42b029?style=for-the-badge&logo=python&logoColor=white
 [Yahoo-Finance]: https://img.shields.io/badge/Yahoo%20Finance%20API-6001D2?style=for-the-badge&logo=yahoo&logoColor=white
 [Streamlit-logo]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white
