@@ -72,6 +72,14 @@
 <!-- data-format -->
 ## Data Format
 
+Extension :
+
+```
+etf_file.txt
+```
+
+Format :
+
 | Date  | Ouverture | Haut | Bas | Clôture | Volume | Devise |
 | ----- | --------- | ---- | --- | ------- | ------ | ------ |
 | (Object) | (float64) | (float64) | (float64) | (float64) | (float64) | (Object) |
