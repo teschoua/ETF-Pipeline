@@ -1,10 +1,8 @@
 import os
-import re
 import time
 from pathlib import Path
 
 from bs4 import BeautifulSoup
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as firefoxOptions
 from selenium.webdriver.common.by import By
@@ -12,7 +10,6 @@ from selenium.webdriver.common.by import By
 import concurrent.futures
 from concurrent.futures import as_completed
 
-from random import random
 from threading import Lock
 
 path_folder = Path(os.getcwd())
@@ -85,7 +82,6 @@ def request_save_list_etf_pages():
 def request_download_etf(list_etf_links):
 
     urls = ['https://www.boursorama.com' + etf_link for etf_link in list_etf_links]
-    print(list_etf_links)
 
     def request_url(url):
 
@@ -118,7 +114,7 @@ def request_download_etf(list_etf_links):
             download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
             download_button.click()
 
-            time.sleep(4)
+            time.sleep(10)
 
             driver.quit()
 
@@ -143,28 +139,37 @@ def request_download_etf(list_etf_links):
     # total completed tasks
     tasks_completed = 0
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=15) as executor:
+    start_time = time.time()
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         # executor.map(request_url, urls, timeout=5)
         futures = [executor.submit(request_url, url) for url in urls]
 
         for future in as_completed(futures, timeout=None):
-            future.add_done_callback(progress_indicator)
+            try:
+                future.add_done_callback(progress_indicator)
+                # print(future.result(timeout=20))
+
+            except concurrent.futures.TimeoutError:
+                print("Timeout")
+
 
         executor.shutdown()
 
+    print("--- %s seconds ---" % (time.time() - start_time))
     return 'Done'
+
 def main():
     # geckodriver_autoinstaller.install()
 
-  # URLs pages with list of ETFs
-
-  # 1. request_save_list_etf_pages()
+  # 1. URLs pages with list of ETFs
+  # request_save_list_etf_pages()
 
   # 2. Load list_etf pages
     list_etf_links = parse_pages('list_etf')
 
-  # Request each ETF and Download Data
-    request_download_etf(list_etf_links[0:20])
+  # 3. Request each ETF and Download Data in folder ETF
+    request_download_etf(list_etf_links[0:2])
 
 if __name__ == "__main__":
     main()
