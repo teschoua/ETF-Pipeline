@@ -61,15 +61,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-
-https://user-images.githubusercontent.com/48710939/188311265-dafb77bc-0e8f-439a-96b4-950354fdfe43.mp4
-
-
-<br />
-<br />
-<br />
-
-### Built With
+## Built With
 
 * [![Python][Python-logo]](https://pythonprogramming.net/)
 * [![Streamlit][Streamlit-logo]](https://streamlit-io.translate.goog/?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=sc)
@@ -83,29 +75,12 @@ https://user-images.githubusercontent.com/48710939/188311265-dafb77bc-0e8f-439a-
 <br />
 <br />
 
-<!-- Dataset -->
-## Dataset
+<!-- data-format -->
+## Data Format
 
-### Yahoo Finance API
-
-#### a. Request
-``` 
-yfinance.download(tickers=TSLA,
-		  start="2010-08-12",
-		  end="2022-09-03",
-		  interval="1d",
-		  group_by='ticker',
-		  # Mass Downloading
-		  threads=True,
-		  proxy=None
-		 )
-```
-
-#### b. Response Format
-
-| Date  | Open | High | Low | Close | Adj Close | Volume | 
-| ----- | -----| ---- | ----| ----- | --------- | ------ |
-| (Object) | (float64) | (float64) | (float64) | (float64) | (float64) | (int64) |
+| Date  | Ouverture | Haut | Bas | Clotûre | Volume | Devise |
+| ----- | --------- | ---- | --- | ------- | ------ | ------ |
+| (Object) | (float64) | (float64) | (float64) | (float64) | (Object) |
 
 
 <br />
