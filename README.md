@@ -75,7 +75,7 @@
 <b>Extension</b> :
 
 ```
-etf_file.txt
+file_name.txt
 ```
 
 <b>Format</b>  :
