@@ -83,21 +83,21 @@
 
 Installation Commands :
 
-'''
+```
 git clone https://github.com/teschoua/ETF-Pipeline
-'''
+```
 
 Install Requirements :
 
-'''
+```
 pip install -r requirements.txt
-'''
+```
 
 Run the script :
 
-'''
+```
 python ETF_scrapping.py
-'''
+```
 
 <br/>
 
