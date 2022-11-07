@@ -99,7 +99,10 @@ Run the script :
 python ETF_scrapping.py
 ```
 
-Downloaded files will be in the folder Dataset/ETF/
+Downloaded files will be in the folder :
+```
+./Dataset/ETF/
+```
 
 <br/>
 
@@ -108,7 +111,6 @@ Downloaded files will be in the folder Dataset/ETF/
 
 Thibaut ESCHOUA
 
-Project Link: [Stock Prediction Simulator](http://ec2-18-212-239-239.compute-1.amazonaws.com/) <br/>
 Linkedin : [Linkedin Thibaut ESCHOUA](https://www.linkedin.com/in/thibaut-eschoua/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
