@@ -64,12 +64,8 @@
 ## Built With
 
 * [![Python][Python-logo]](https://pythonprogramming.net/)
-* [![Streamlit][Streamlit-logo]](https://streamlit-io.translate.goog/?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=sc)
-* [![Amazon][Amazon-logo]](https://aws.amazon.com/fr/ec2/)
-* [![Docker][Docker-logo]](https://www.docker.com/)
-* [![Plotly][Plotly-logo]](https://plotly.com/)
-* [![Tensorflow][Tensorflow-logo]](https://www.tensorflow.org/)
-* [![Yahoo Finance][Yahoo-Finance]](https://pypi.org/project/yfinance/)
+* [![Selenium][Selenium-logo]](https://selenium-python.readthedocs.io/)
+* [![Beautiful Soup][Beautifulsoup-logo]]([https://aws.amazon.com/fr/ec2/](https://python.doctor/page-beautifulsoup-html-parser-python-library-xml))
 
 
 <br />
@@ -78,14 +74,14 @@
 <!-- data-format -->
 ## Data Format
 
-| Date  | Ouverture | Haut | Bas | Clotûre | Volume | Devise |
+| Date  | Ouverture | Haut | Bas | Clôture | Volume | Devise |
 | ----- | --------- | ---- | --- | ------- | ------ | ------ |
 | (Object) | (float64) | (float64) | (float64) | (float64) | (float64) | (Object) |
 
 
 <br />
 
-### Preprocessing
+## Commands
 
 The goal of the model is to predict the close price for the next 7 days, based on the previous 30 days close prices.
 
@@ -96,53 +92,6 @@ The goal of the model is to predict the close price for the next 7 days, based o
 This way we create a **train dataset** with a shape of **(batch_size, 30, 1)**, and a **test dataset** with a shape of **(batch_size, 7)**.
 
 <br/>
-
-<!-- Model -->
-## Model
-
-* At the preprocessing step, I managed to have inputs with a 3D shape, which is perfect for a Bidirectional Long Short Time Memory (Bi-LSTM) model. 
-
-* The original **LSTM** or **Unidirectional LSTM** was developped to deal with the vanishing gradient problem, of the **Recurrent Neural Network (RNN)**, that was unabled to work with large inputs. <br/>
-This **LSTM** is applicable to tasks involving a **chronological sequences**, such as speech or handwritting recognition, machine translation, or stock prediction in our case. <br/>
-
-* The **Bidirectional LSTM model** works like the **unidirectional LSTM**, but it takes into consideration not only the past data, but also the future data, so that we can have a better understanding of the context.
-
-### Model summary
-
-
-|           Layer (type)        | Output Shape  | Param #  | 
-| ----------------------------- | --------------| -------- |
-| bidirectional (Bidirectional) | (None, 512)   | 528384   | 
-| dropout (Dropout)             | (None, 512)   | 0        | 
-| dense (Dense)                 | (None, 7)     | 3591     | 
-
-
-Total params: 531,975 <br/>
-Trainable params: 531,975 <br/>
-Non-trainable params: 0 <br/>
-
-
-<br/>
-<br/>
-
-<!-- Results -->
-## Results
-
-### Metrics
-
-* **Mean Squared Error (MSE)** : <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measures the average magnitude of the error. <br/><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MSE = $\frac{1}{n} \Sigma_{i=1}^n({y_{i}}-\hat{y_{i}})^2$
-
-* **Mean Absolute Error (MAE)** : <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measures the average magnitude of the error, without considering their direction. <br/><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MAE = $\frac{1}{n} \Sigma_{i=1}^{n}|y_i-\hat{y_{i}}|$
-
-### Results of the model
-
-| MAE | MSE  | 
-| ------ | ------ | 
-| 0.0460 | 0.0039 | 
 
 <!-- CONTACT -->
 ## Contact
@@ -171,6 +120,8 @@ Linkedin : [Linkedin Thibaut ESCHOUA](https://www.linkedin.com/in/thibaut-eschou
 [linkedin-url]: https://www.linkedin.com/in/thibaut-eschoua/
 [product-screenshot]: images/screenshot.png
 [Python-logo]: https://img.shields.io/badge/Python-20232A?style=for-the-badge&logo=python&logoColor=white
+[Beautifulsoup-logo]:https://img.shields.io/badge/Beautifulsoup-20232A?style=for-the-badge&logo=python&logoColor=white
+[Selenium-logo]:https://img.shields.io/badge/Selenium-42b029?style=for-the-badge&logo=python&logoColor=white
 [Yahoo-Finance]: https://img.shields.io/badge/Yahoo%20Finance%20API-6001D2?style=for-the-badge&logo=yahoo&logoColor=white
 [Streamlit-logo]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white
 [Plotly-logo]: https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white
