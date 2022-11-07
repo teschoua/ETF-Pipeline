@@ -26,7 +26,7 @@
 <br />
 <div align="center">
   <a href="http://ec2-18-212-239-239.compute-1.amazonaws.com/">
-    <img src="Images/monitoring.png" alt="Logo" width="80" height="80">
+    <img src="Images/pipeline.png" alt="Logo" width="80" height="80">
   </a>
 
 <h1 align="center">Stock Prediction Simulator</h1>
