@@ -1,6 +1,9 @@
 import os
 import time
 from pathlib import Path
+import pickle
+import re
+from os import walk
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -11,6 +14,8 @@ import concurrent.futures
 from concurrent.futures import as_completed
 
 from threading import Lock
+
+# import pywatch
 
 path_folder = Path(os.getcwd())
 
@@ -85,6 +90,8 @@ def request_download_etf(list_etf_links):
 
     def request_url(url):
 
+        nonlocal dict_etf
+
         options = firefoxOptions()
         options.add_argument("--headless")
         options.set_preference("browser.download.folderList", 2)
@@ -109,12 +116,23 @@ def request_download_etf(list_etf_links):
             time_10_years = driver.find_element(By.XPATH, "//div[@data-brs-quote-chart-duration-length='3650']")
             time_10_years.click()
 
+            # Code ISIN of the ETF (12 characters)
+            code_isin = driver.find_element(By.XPATH, "//h2[@class='c-faceplate__isin']").text[0:12]
+
+            # Name of the ETF
+            name_etf = driver.find_element(By.XPATH, "//a[@class='c-faceplate__company-link ']").text.replace(' ', '')
+            name_etf = re.sub('[^A-Za-z0-9]+', '', name_etf)
+            name_etf = name_etf.upper()
+
+            # Add (code_isin and name_etf) in dict_etf
+            dict_etf[name_etf] = code_isin
+
             # Download
-            # download_button = driver.find_element(By.CLASS_NAME, "c-quote-chart__quick-command")
+            download_button = driver.find_element(By.CLASS_NAME, "c-quote-chart__quick-command")
             download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
             download_button.click()
 
-            time.sleep(10)
+            time.sleep(15)
 
             driver.quit()
 
@@ -132,6 +150,8 @@ def request_download_etf(list_etf_links):
             # report progress
             print(f'{tasks_completed}/{tasks_total} completed, {tasks_total-tasks_completed} remain.')
 
+    # Dictionnary of (ETF name and Code ISIN)
+    dict_etf = {}
     # create a lock for the counter
     lock = Lock()
     # total tasks we will execute
@@ -153,23 +173,49 @@ def request_download_etf(list_etf_links):
             except concurrent.futures.TimeoutError:
                 print("Timeout")
 
-
         executor.shutdown()
 
     print("--- %s seconds ---" % (time.time() - start_time))
-    return 'Done'
+
+    with open('./Dataset/Pickles/dict_etf.pickle', 'wb') as handle:
+        pickle.dump(dict_etf, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    return dict_etf
+
+
+def rename_etf_files():
+
+    start_time = time.time()
+
+    with open('./Dataset/Pickles/dict_etf.pickle', 'rb') as handle:
+        dict_etf = pickle.load(handle)
+
+        for (_, _, filenames) in walk('./Dataset/ETF/'):
+            for filename in filenames:
+                for name_etf in dict_etf.keys():
+                    if name_etf in filename:
+                        # Rename as : nameETF_ISNCode.txt
+                        new_filename = name_etf + "_" + dict_etf[name_etf]
+                        os.rename(path_folder/f'Dataset/ETF/{filename}', path_folder/f'Dataset/ETF/{new_filename}')
+                        print(f"PAST NAME : {filename}, NEW NAME: {new_filename}")
+
+        print("--- %s seconds ---" % (time.time() - start_time))
 
 def main():
     # geckodriver_autoinstaller.install()
 
-  # 1. URLs pages with list of ETFs
-  # request_save_list_etf_pages()
+    # 1. URLs pages with list of ETFs
+    # request_save_list_etf_pages()
 
-  # 2. Load list_etf pages
+    # 2. Load list_etf pages
     list_etf_links = parse_pages('list_etf')
 
-  # 3. Request each ETF and Download Data in folder ETF
-    request_download_etf(list_etf_links[0:2])
+    # 3. Request each ETF and Download Data in folder ETF
+    # request_download_etf(list_etf_links)
+
+    # 4. Rename Files with (name_etf and ISIN code)
+    # rename_etf_files()
+
 
 if __name__ == "__main__":
     main()
