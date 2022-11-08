@@ -26,17 +26,14 @@
 <br />
 <div align="center">
   <a href="http://ec2-18-212-239-239.compute-1.amazonaws.com/">
-    <img src="Images/monitoring.png" alt="Logo" width="80" height="80">
+    <img src="Images/pipeline.png" alt="Logo" width="80" height="80">
   </a>
 
-<h1 align="center">Stock Prediction Simulator</h1>
+<h1 align="center">ETF Pipeline</h1>
 
 </div>
 
-* Stock Prediction Simulator is a Web Application that allows you to simulate trades on a given period, based on a machine learning model (Bi-LSTM). <br/>
-* The application offers a dynamic candlestick chart, where you can supervise the predicted price, the information about the trades made, and the actual price of the stock. <br/>
-* A trade table and an balance chart are also avaible, so that you can track the evolution of your account balance trade by trade.
-* Web App Link : http://ec2-18-212-239-239.compute-1.amazonaws.com/
+* ETF Pipeline is a Web Scraping project that allows you to download historical data of ETFs from the website [www.boursorama.com](https://www.boursorama.com).
 <br />
 <br />
 
@@ -45,27 +42,17 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
+      	<a href="#built-with">Built With</a></li>
     </li>
     <li>
-      <a href="#dataset">Dataset</a>
-      <ul>
-        <li><a href="#yahoo-finance-api">Yahoo Finance API</a></li>
-        <li><a href="#preprocessing">Preprocessing</a></li>
-      </ul>
+	<a href="#data-format">Data Format</a>
     </li>
-    <li><a href="#model">Model</a></li>
     <li>
-      <a href="#results">Results</a>
-      <ul>
-        <li><a href="#metrics">Metrics</a></li>
-        <li><a href="#results-of-the-model">Results of the model</a></li>
-      </ul>
+      	<a href="#commands">Commands</a>
     </li>
-    <li><a href="#contact">Contact</a></li>
+    <li>
+    	<a href="#contact">Contact</a>
+    </li>
   </ol>
 </details>
 
@@ -74,120 +61,64 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-
-https://user-images.githubusercontent.com/48710939/188311265-dafb77bc-0e8f-439a-96b4-950354fdfe43.mp4
-
-
-<br />
-<br />
-<br />
-
-### Built With
+## Built With
 
 * [![Python][Python-logo]](https://pythonprogramming.net/)
-* [![Streamlit][Streamlit-logo]](https://streamlit-io.translate.goog/?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=fr&_x_tr_pto=sc)
-* [![Amazon][Amazon-logo]](https://aws.amazon.com/fr/ec2/)
-* [![Docker][Docker-logo]](https://www.docker.com/)
-* [![Plotly][Plotly-logo]](https://plotly.com/)
-* [![Tensorflow][Tensorflow-logo]](https://www.tensorflow.org/)
-* [![Yahoo Finance][Yahoo-Finance]](https://pypi.org/project/yfinance/)
-
+* [![Selenium][Selenium-logo]](https://selenium-python.readthedocs.io/)
+* [![Beautiful Soup][Beautifulsoup-logo]]([https://aws.amazon.com/fr/ec2/](https://python.doctor/page-beautifulsoup-html-parser-python-library-xml))
 
 <br />
-<br />
 
-<!-- Dataset -->
-## Dataset
+<!-- data-format -->
+## Data Format
 
-### Yahoo Finance API
+<b>Extension</b> :
 
-#### a. Request
-``` 
-yfinance.download(tickers=TSLA,
-		  start="2010-08-12",
-		  end="2022-09-03",
-		  interval="1d",
-		  group_by='ticker',
-		  # Mass Downloading
-		  threads=True,
-		  proxy=None
-		 )
+```
+file_name.txt
 ```
 
-#### b. Response Format
+<b>Format</b>  :
 
-| Date  | Open | High | Low | Close | Adj Close | Volume | 
-| ----- | -----| ---- | ----| ----- | --------- | ------ |
-| (Object) | (float64) | (float64) | (float64) | (float64) | (float64) | (int64) |
+| Date  | Ouverture | Haut | Bas | Clôture | Volume | Devise |
+| ----- | --------- | ---- | --- | ------- | ------ | ------ |
+| (Object) | (float64) | (float64) | (float64) | (float64) | (float64) | (Object) |
 
 
 <br />
 
-### Preprocessing
+## Commands
 
-The goal of the model is to predict the close price for the next 7 days, based on the previous 30 days close prices.
+Installation Commands :
 
-<a>
-    <img src="Images/structure-data.png" >
-</a>
+```
+git clone https://github.com/teschoua/ETF-Pipeline
+```
 
-This way we create a **train dataset** with a shape of **(batch_size, 30, 1)**, and a **test dataset** with a shape of **(batch_size, 7)**.
+Install Requirements :
 
-<br/>
+```
+pip install -r requirements.txt
+```
 
-<!-- Model -->
-## Model
+Run the script :
 
-* At the preprocessing step, I managed to have inputs with a 3D shape, which is perfect for a Bidirectional Long Short Time Memory (Bi-LSTM) model. 
+```
+python ETF_scrapping.py
+```
 
-* The original **LSTM** or **Unidirectional LSTM** was developped to deal with the vanishing gradient problem, of the **Recurrent Neural Network (RNN)**, that was unabled to work with large inputs. <br/>
-This **LSTM** is applicable to tasks involving a **chronological sequences**, such as speech or handwritting recognition, machine translation, or stock prediction in our case. <br/>
-
-* The **Bidirectional LSTM model** works like the **unidirectional LSTM**, but it takes into consideration not only the past data, but also the future data, so that we can have a better understanding of the context.
-
-### Model summary
-
-
-|           Layer (type)        | Output Shape  | Param #  | 
-| ----------------------------- | --------------| -------- |
-| bidirectional (Bidirectional) | (None, 512)   | 528384   | 
-| dropout (Dropout)             | (None, 512)   | 0        | 
-| dense (Dense)                 | (None, 7)     | 3591     | 
-
-
-Total params: 531,975 <br/>
-Trainable params: 531,975 <br/>
-Non-trainable params: 0 <br/>
-
+Downloaded files will be in the folder :
+```
+./Dataset/ETF/
+```
 
 <br/>
-<br/>
-
-<!-- Results -->
-## Results
-
-### Metrics
-
-* **Mean Squared Error (MSE)** : <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measures the average magnitude of the error. <br/><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MSE = $\frac{1}{n} \Sigma_{i=1}^n({y_{i}}-\hat{y_{i}})^2$
-
-* **Mean Absolute Error (MAE)** : <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measures the average magnitude of the error, without considering their direction. <br/><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; MAE = $\frac{1}{n} \Sigma_{i=1}^{n}|y_i-\hat{y_{i}}|$
-
-### Results of the model
-
-| MAE | MSE  | 
-| ------ | ------ | 
-| 0.0460 | 0.0039 | 
 
 <!-- CONTACT -->
 ## Contact
 
 Thibaut ESCHOUA
 
-Project Link: [Stock Prediction Simulator](http://ec2-18-212-239-239.compute-1.amazonaws.com/) <br/>
 Linkedin : [Linkedin Thibaut ESCHOUA](https://www.linkedin.com/in/thibaut-eschoua/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -209,6 +140,8 @@ Linkedin : [Linkedin Thibaut ESCHOUA](https://www.linkedin.com/in/thibaut-eschou
 [linkedin-url]: https://www.linkedin.com/in/thibaut-eschoua/
 [product-screenshot]: images/screenshot.png
 [Python-logo]: https://img.shields.io/badge/Python-20232A?style=for-the-badge&logo=python&logoColor=white
+[Beautifulsoup-logo]:https://img.shields.io/badge/Beautifulsoup-fc9003?style=for-the-badge&logo=python&logoColor=white
+[Selenium-logo]:https://img.shields.io/badge/Selenium-42b029?style=for-the-badge&logo=python&logoColor=white
 [Yahoo-Finance]: https://img.shields.io/badge/Yahoo%20Finance%20API-6001D2?style=for-the-badge&logo=yahoo&logoColor=white
 [Streamlit-logo]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white
 [Plotly-logo]: https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white
