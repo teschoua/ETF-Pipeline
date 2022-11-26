@@ -102,19 +102,23 @@ def request_download_etf(list_etf_links):
         driver = webdriver.Firefox(options=options)
 
         try:
-
             driver.get(url)
-            
-            # time.sleep(1)
-            # Decline Cookies
+
+            # Accept Cookies
             # cookie_accepting = driver.find_element(By.CLASS_NAME, "didomi-continue-without-agreeing")
             cookie_accepting = driver.find_element(By.ID, "didomi-notice-agree-button")
 
             cookie_accepting.click()
 
-            # Change temporality to 10 years
-            time_10_years = driver.find_element(By.XPATH, "//div[@data-brs-quote-chart-duration-length='3650']")
-            time_10_years.click()
+            '''
+            dict_etf = {
+                        codeisin : codeisin
+                        dict_copmanies : {},
+                        dict_countries : {},
+                        dict_activites : {}
+                        }
+            '''
+            # Cours Tab
 
             # Code ISIN of the ETF (12 characters)
             code_isin = driver.find_element(By.XPATH, "//h2[@class='c-faceplate__isin']").text[0:12]
@@ -124,15 +128,91 @@ def request_download_etf(list_etf_links):
             name_etf = re.sub('[^A-Za-z0-9]+', '', name_etf)
             name_etf = name_etf.upper()
 
-            # Add (code_isin and name_etf) in dict_etf
-            dict_etf[name_etf] = code_isin
+            time.sleep(4)
+
+            # Composition Tab
+            composition_tab = driver.find_element(By.XPATH, "//nav[@class='c-submenubar / o-list-inline']/ul/li[3]")
+            composition_tab.click()
+
+            # 1. Companies
+            dict_companies = {}
+            table_companies = driver.find_element(By.XPATH, "//table[@class='c-table c-table--bottom-space']")
+            rows_companies = table_companies.find_elements(By.TAG_NAME, "tr")
+
+            for row in rows_companies:
+                row_companie_name = row.find_elements(By.TAG_NAME, "td")[0].text
+                row_companie_td = row.find_elements(By.TAG_NAME, "td")[1]
+                row_companie_percentage = row_companie_td.find_element(By.TAG_NAME, "div").get_attribute('data-gauge-current-step')
+
+                dict_companies[row_companie_name] = row_companie_percentage
+
+
+            # 2. Countries
+            dict_countries = {}
+            # table_countries_g = driver.find_element(By.XPATH, "//div[@id='regional']").find_element(By.XPATH, "//div[@class='amChartsLegend amcharts-legend-div']").find_element(By.TAG_NAME, "g").find_element(By.TAG_NAME, "g")
+            table_countries_g = driver.find_elements(By.XPATH, "//div[@class='amChartsLegend amcharts-legend-div']")[0].find_element(By.TAG_NAME, "g").find_element(By.TAG_NAME, "g")
+            table_countries = table_countries_g.find_elements(By.TAG_NAME, "g")
+
+            for row in table_countries:
+                if row.get_attribute('aria-label') is None :
+                    continue
+                else:
+                    row_country_properties = re.split('(\d+)', row.text)
+
+                    # Name Country
+                    row_country_name = row_country_properties[0]
+                    # Percentage Country
+                    row_country_percentage = ''.join(row_country_properties[1:])
+                    dict_countries[row_country_name] = row_country_percentage
+
+            # 3. Activites
+            dict_activities = {}
+            # table_activities_div_sector = driver.find_element(By.XPATH, "//div[@id='sector']")
+
+            # table_activities_g = table_activities_div_sector.find_elements(By.XPATH, "//div[@class='amChartsLegend amcharts-legend-div']")[2]
+            try:
+                table_activities_g = driver.find_elements(By.XPATH, "//div[@class='amChartsLegend amcharts-legend-div']")[2]
+                table_activities = table_activities_g.find_element(By.TAG_NAME, "g").find_element(By.TAG_NAME, "g").find_elements(By.TAG_NAME, "g")
+
+                for row_activity in table_activities:
+                    if row_activity.get_attribute('aria-label') is None:
+                        continue
+                    else:
+                        row_activities_properties = re.split('(\d+)', row_activity.text)
+
+                        # Activity Name
+                        activity_name = row_activities_properties[0]
+                        activity_percentage = ''.join(row_activities_properties[1:])
+
+                        dict_activities[activity_name] = activity_percentage
+            except Exception as e:
+                print(url)
+
+            etf_properties = {
+                'codeisin': code_isin,
+                'dict_companies': dict_companies,
+                'dict_countries': dict_countries,
+                'dict_activities': dict_activities
+            }
+
+            dict_etf[name_etf] = etf_properties
+            '''
+            # Swtich to Cours tab
+            cours_tab = driver.find_element(By.XPATH, "//a[@class='c-submenubar__link ']")
+            cours_tab.click()
+
+            time.sleep(3)
+            
+            # Change temporality to 10 years
+            time_10_years = driver.find_element(By.XPATH, "//div[@data-brs-quote-chart-duration-length='3650']")
+            time_10_years.click()
 
             # Download
             download_button = driver.find_element(By.CLASS_NAME, "c-quote-chart__quick-command")
             download_button = driver.find_element(By.XPATH, '//div[@aria-label="Télécharger les cotations"]')
             download_button.click()
-
-            time.sleep(15)
+            '''
+            time.sleep(8)
 
             driver.quit()
 
@@ -182,7 +262,6 @@ def request_download_etf(list_etf_links):
 
     return dict_etf
 
-
 def rename_etf_files():
 
     start_time = time.time()
@@ -195,10 +274,9 @@ def rename_etf_files():
                 for name_etf in dict_etf.keys():
                     if name_etf in filename:
                         # Rename as : nameETF_ISNCode.txt
-                        new_filename = name_etf + "_" + dict_etf[name_etf]
+                        new_filename = name_etf + "_" + dict_etf[name_etf]['codeisin'] + '.txt'
                         os.rename(path_folder/f'Dataset/ETF/{filename}', path_folder/f'Dataset/ETF/{new_filename}')
                         print(f"PAST NAME : {filename}, NEW NAME: {new_filename}")
-
         print("--- %s seconds ---" % (time.time() - start_time))
 
 def main():
@@ -211,11 +289,14 @@ def main():
     list_etf_links = parse_pages('list_etf')
 
     # 3. Request each ETF and Download Data in folder ETF
-    # request_download_etf(list_etf_links)
-
+    # dict_etf = request_download_etf(list_etf_links)
     # 4. Rename Files with (name_etf and ISIN code)
     # rename_etf_files()
+    # 5. Load dict_etf
+    with open('./Dataset/Pickles/dict_etf.pickle', 'rb') as handle:
+        dict_etf = pickle.load(handle)
 
+    print(dict_etf['HSBCEUROSTOXX50ETF'])
 
 if __name__ == "__main__":
     main()
